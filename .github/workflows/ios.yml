@@ -7,6 +7,11 @@ on:
         description: "Full 40-character commit SHA from private source main"
         required: true
         type: string
+      upload_testflight:
+        description: "Upload the validated build to TestFlight"
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -100,6 +105,7 @@ jobs:
           fi
 
       - name: Install and validate signing material
+        if: inputs.upload_testflight
         shell: bash
         env:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
@@ -153,6 +159,7 @@ jobs:
           fi
 
       - name: Archive and export application
+        if: inputs.upload_testflight
         shell: bash
         working-directory: private-source
         env:
@@ -180,6 +187,7 @@ jobs:
           fi
 
       - name: Upload to TestFlight
+        if: inputs.upload_testflight
         uses: apple-actions/upload-testflight-build@665328adbecbc3ad929d3da710696d928b8a7ba9 # v5
         with:
           app-path: ${{ env.IPA_PATH }}
