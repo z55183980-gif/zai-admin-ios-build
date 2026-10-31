@@ -61,7 +61,7 @@ jobs:
         working-directory: private-source
         run: |
           if ! bash -euo pipefail <<'PRIVATE' > "$RUNNER_TEMP/native-verify.log" 2>&1
-          test "$(git rev-parse HEAD)" = "$(printf '%s' "$SOURCE_SHA" | tr 'A-F' 'a-f')"`n          test -d "$(xcode-select -p)"
+          test "$(git rev-parse HEAD)" = "$(printf '%s' "$SOURCE_SHA" | tr 'A-F' 'a-f')"`r`n          test -d "$(xcode-select -p)"
           python3 scripts/generate-native-project.py
           git diff --exit-code -- ios/NativeAdmin.xcodeproj ios/NativeAdmin/Info.plist
           python3 scripts/check-native-project.py
