@@ -198,6 +198,6 @@ jobs:
           if [[ "${PROFILE_UUID:-}" =~ ^[0-9A-Fa-f-]{36}$ ]]; then
             rm -f "$HOME/Library/MobileDevice/Provisioning Profiles/$PROFILE_UUID.mobileprovision" "$HOME/Library/Developer/Xcode/UserData/Provisioning Profiles/$PROFILE_UUID.mobileprovision"
           fi
-          rm -rf "$GITHUB_WORKSPACE/private-source" "$RUNNER_TEMP/native-derived" "$RUNNER_TEMP/native-tests.xcresult" "$RUNNER_TEMP/native-archive.xcarchive" "$RUNNER_TEMP/native-export"
+          rm -rf "$GITHUB_WORKSPACE/private-source" "$RUNNER_TEMP/native-derived" "$RUNNER_TEMP/native-tests.xcresult" "$RUNNER_TEMP/native-archive.xcarchive" "$RUNNER_TEMP/native-export" "$HOME/private_keys"
           rm -f "$RUNNER_TEMP"/native-*.log "$RUNNER_TEMP/native-certificate.p12" "$RUNNER_TEMP/native-profile.mobileprovision" "$RUNNER_TEMP/native-profile.plist" "$RUNNER_TEMP/native-export.plist"
           exit 0
