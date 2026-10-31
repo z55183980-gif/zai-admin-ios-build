@@ -197,6 +197,34 @@ jobs:
           api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
           wait-for-processing: 'true'
 
+      - name: Encrypt failed compilation diagnostics
+        if: failure()
+        shell: bash
+        env:
+          PUBLIC_CERT: ${{ vars.DIAGNOSTICS_PUBLIC_CERT }}
+        run: |
+          set -euo pipefail
+          test -n "$PUBLIC_CERT"
+          printf '%s\n' "$PUBLIC_CERT" > "$RUNNER_TEMP/diagnostics-cert.pem"
+          cd "$RUNNER_TEMP"
+          files=()
+          for name in native-verify.log native-build.log native-tests.log; do
+            if [ -f "$name" ]; then files+=("$name"); fi
+          done
+          tar -czf native-diagnostics.tar.gz "${files[@]}"
+          openssl smime -encrypt -binary -aes-256-cbc -in native-diagnostics.tar.gz \
+            -out native-diagnostics.enc -outform DER diagnostics-cert.pem
+          rm -f native-diagnostics.tar.gz diagnostics-cert.pem
+
+      - name: Save encrypted diagnostics
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: encrypted-native-diagnostics
+          path: ${{ runner.temp }}/native-diagnostics.enc
+          retention-days: 1
+          if-no-files-found: ignore
+
       - name: Remove private build material
         if: always()
         shell: bash
