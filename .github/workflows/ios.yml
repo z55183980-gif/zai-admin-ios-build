@@ -76,6 +76,8 @@ jobs:
           echo "static native checks passed"
           PRIVATE
           then
+            echo 'Verification details (non-secret):'
+            sed -n '1,120p' "$RUNNER_TEMP/native-verify.log"
             echo '::error::Private source validation failed; inspect this revision in the private repository.'
             exit 1
           fi
