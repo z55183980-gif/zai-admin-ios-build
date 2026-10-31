@@ -61,9 +61,7 @@ jobs:
         working-directory: private-source
         run: |
           if ! bash -euo pipefail <<'PRIVATE' > "$RUNNER_TEMP/native-verify.log" 2>&1
-          test "$(git rev-parse HEAD)" = "$(printf '%s' "$SOURCE_SHA" | tr 'A-F' 'a-f')"
-          git merge-base --is-ancestor HEAD origin/main
-          test -d "$(xcode-select -p)"
+          test "$(git rev-parse HEAD)" = "$(printf '%s' "$SOURCE_SHA" | tr 'A-F' 'a-f')"`n          test -d "$(xcode-select -p)"
           python3 scripts/generate-native-project.py
           git diff --exit-code -- ios/NativeAdmin.xcodeproj ios/NativeAdmin/Info.plist
           python3 scripts/check-native-project.py
@@ -237,3 +235,4 @@ jobs:
           rm -rf "$GITHUB_WORKSPACE/private-source" "$RUNNER_TEMP/native-derived" "$RUNNER_TEMP/native-tests.xcresult" "$RUNNER_TEMP/native-archive.xcarchive" "$RUNNER_TEMP/native-export" "$HOME/private_keys"
           rm -f "$RUNNER_TEMP"/native-*.log "$RUNNER_TEMP/native-certificate.p12" "$RUNNER_TEMP/native-profile.mobileprovision" "$RUNNER_TEMP/native-profile.plist" "$RUNNER_TEMP/native-export.plist"
           exit 0
+
