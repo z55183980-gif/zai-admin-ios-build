@@ -62,13 +62,18 @@ jobs:
         run: |
           if ! bash -euo pipefail <<'PRIVATE' > "$RUNNER_TEMP/native-verify.log" 2>&1
           test "$(git rev-parse HEAD)" = "$(printf '%s' "$SOURCE_SHA" | tr 'A-F' 'a-f')"
+          echo "source SHA verified"
           # The source checkout is pinned to the requested immutable SHA. The
           # private repository may not expose a remote-tracking main ref to a
           # sparse detached checkout, so SHA equality above is the authority.
           test -d "$(xcode-select -p)"
+          echo "Xcode path verified"
           python3 scripts/generate-native-project.py
+          echo "native project generated"
           git diff --exit-code -- ios/NativeAdmin.xcodeproj ios/NativeAdmin/Info.plist
+          echo "generated files match commit"
           python3 scripts/check-native-project.py
+          echo "static native checks passed"
           PRIVATE
           then
             echo '::error::Private source validation failed; inspect this revision in the private repository.'
